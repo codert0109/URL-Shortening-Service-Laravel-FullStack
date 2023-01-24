@@ -1,29 +1,34 @@
 @extends('../components/layout')
 @section('bladeViewContent')
-<x-card class="pl-20 pr-20 max-w-6xl mx-auto mt-10">
+<div class="p-12">
     <div class="mb-6">
-        <label for="url" class="inline-block text-lg mb-2">Url</label>
-        <input type="text" class="border border-gray-200 rounded p-2 w-full" id="url" placeholder='Input Url' value="{{old('email')}}" />
-        <p class="text-red-300 text-xs mt-1" id='error'></p>
-        <p class="text-green-300 text-xs mt-1" id='success'></p>
+        <div class="flex">
+            <div class="grow h-14">
+                <input type="text" class="border border-gray-200 rounded p-2 w-full" id="url" placeholder='Input Url' value="{{old('email')}}" />
+            </div>
+            <div class="flex-none">
+                <button id="submit" class="bg-laravel text-white rounded py-2 px-8 hover:bg-black ml-4"> Submit </button>
+            </div>
+        </div>
+        <div class="row">
+            <p class="text-red-300 text-xs mt-1" id='error'></p>
+            <p class="text-green-300 text-xs mt-1" id='success'></p>
+        </div>
     </div>
 
-    <div class="mb-6 text-center">
-        <button id="submit" class="bg-laravel text-white rounded py-2 px-4 hover:bg-black"> Sign In </button>
-    </div>
-    <table>
-        <thead>
-            <tr>
-                <th>
+    <table class="border-collapse border border-slate-700 table-auto border-spacing-4 mx-auto w-full text-center">
+        <thead class="">
+            <tr class="bg-stone-200">
+                <th class="border border-slate-600 p-2">
                     Destination
                 </th>
-                <th>
+                <th class="border border-slate-600 p-2">
                     Slug
                 </th>
-                <th>
+                <th class="border border-slate-600 p-2">
                     Shortened Url
                 </th>
-                <th>
+                <th class="border border-slate-600 p-2">
                     Views
                 </th>
             </tr>
@@ -31,23 +36,23 @@
         <tbody>
             @foreach($urls as $url)
             <tr>
-                <td>
-                    {{$url['destination']}}
+                <td class="border border-slate-600 p-2">
+                    <a href="{{$url['destination']}}">{{$url['destination']}}</a>
                 </td>
-                <td>
+                <td class="border border-slate-600 p-2">
                     {{$url['slug']}}
                 </td>
-                <td>
-                    {{env('DOMAIN_URL').$url['slug']}}
+                <td class="border border-slate-600 p-2">
+                    <a href="{{env('DOMAIN_URL').$url['slug']}}">{{env('DOMAIN_URL').$url['slug']}}</a>
                 </td>
-                <td>
+                <td class="border border-slate-600 p-2">
                     {{$url['views']}}
                 </td>
             </tr>
             @endforeach
         </tbody>
     </table>
-</x-card>
+</div>
 @endsection
 
 @section('bladeScript')
@@ -65,11 +70,15 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function(data) {
-                $('#success').html('Url saved successfully!');
-                $('#success').show();
+                $('#success').html('Url saved successfully!').show();
                 let url = data.data;
-                let new_row = `<tr><td>${url.destination}</td><td>${url.slug}</td>
-                <td>${url.shortened_url}</td><td>${url.views}</td></tr>`;
+                let new_row = 
+                    `<tr>
+                        <td class="border border-slate-600 p-2"><a href="${url.destination}">${url.destination}</a></td>
+                        <td class="border border-slate-600 p-2">${url.slug}</td>
+                        <td class="border border-slate-600 p-2"><a href="${url.shortened_url}">${url.shortened_url}</a></td>
+                        <td class="border border-slate-600 p-2">${url.views}</td>
+                    </tr>`;
                 $('tbody').prepend(new_row);
             },
             error: function(data) {

@@ -1,6 +1,6 @@
 @extends('../components/layout')
 @section('bladeViewContent')
-    <x-card class="p-10 max-w-6xl mx-auto mt-24">
+    <x-card class="p-10 max-w-6xl mx-auto">
         <header class="text-center">
             <h2 class="text-2xl font-bold uppercase mb-1"> Login
             </h2>
@@ -26,7 +26,7 @@
                 <button type="submit" class="bg-laravel text-white rounded py-2 px-4 hover:bg-black" > Sign In </button>
             </div>
             <div class="mt-8">
-                <p> Don't have an account? <a href="/register" class="text-laravel"
+                <p> Don't have an account? <a href="/auth/register" class="text-laravel"
                 >Register Here.</a>
                 </p>
             </div>
