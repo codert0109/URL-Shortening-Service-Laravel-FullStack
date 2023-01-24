@@ -15,9 +15,6 @@
         <thead>
             <tr>
                 <th>
-                    No
-                </th>
-                <th>
                     Destination
                 </th>
                 <th>
@@ -34,9 +31,6 @@
         <tbody>
             @foreach($urls as $url)
             <tr>
-                <td>
-                    {{$url['id']}}
-                </td>
                 <td>
                     {{$url['destination']}}
                 </td>
@@ -73,7 +67,10 @@
             success: function(data) {
                 $('#success').html('Url saved successfully!');
                 $('#success').show();
-                console.log(data.data)
+                let url = data.data;
+                let new_row = `<tr><td>${url.destination}</td><td>${url.slug}</td>
+                <td>${url.shortened_url}</td><td>${url.views}</td></tr>`;
+                $('tbody').prepend(new_row);
             },
             error: function(data) {
                 if (data.responseJSON.message != null) {

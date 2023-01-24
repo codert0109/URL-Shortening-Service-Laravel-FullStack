@@ -39,7 +39,7 @@ Route::get('/', [ MainController::class,'index' ]);
 // STORE
 Route::post('/urls', [MainController::class, 'store'])->middleware('auth');
 
-
+Route::get('/{slug}', [MainController::class, 'update']);
 // EDIT
 ////Route::get('/listings/{listing}/edit', [ListingController::class, 'edit'])->middleware('auth');
 

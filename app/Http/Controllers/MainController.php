@@ -83,37 +83,16 @@ class MainController extends Controller
         
 
     }
-// SHOW EDIT FORM
-    public function edit(Listing $listing){
-    if($listing->user_id != auth()->id()){
-        abort(403, '403 Unauthorised');
-    }
-        return view('listings.edit', ['listing'=>$listing]);
-    }
+
 // UPDATE
-public function update(Request $request, Listing $listing){
-    if($listing->user_id != auth()->id()){
-        abort(403, '403 Unauthorised');
-    }
-    $formFields = $request->validate([
-        'company' => 'required',
-        'title' => 'required',
-        'location' => 'required',
-        'email' => ['required', 'email'],
-        'tags' => 'required',
-        'description' => 'required',
-    ]);
-    if($request->hasFile('logo')){
-        $formFields['logo'] = $request->file('logo')->store('logos', 'public');
-    }
-    $listing->update($formFields);
-    return back()->with('message', 'Listing Successfully Edited.');
-    }
-    public function destroy(Listing $listing){
-        if($listing->user_id != auth()->id()){
-            abort(403, '403 Unauthorised');
+public function update($slug){
+        $url = Url::where('slug', $slug)->first();
+        if($url) {
+            $url->update(['views' => $url->views + 1]);
+            return redirect($url->destination);
         }
-        $listing->delete();
-        return redirect('/')->with('message', 'Listing Deleted');
+        else {
+            return view('NotFound');
+        }
     }
 }
