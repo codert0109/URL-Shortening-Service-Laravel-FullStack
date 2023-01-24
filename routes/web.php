@@ -37,7 +37,7 @@ Route::get('/', [ MainController::class,'index' ]);
 ////Route::get('/listings/create', [ ListingController::class, 'create'])->middleware('auth');
 
 // STORE
-//Route::post('/listings', [ListingController::class, 'store'])->middleware('auth');
+Route::post('/urls', [MainController::class, 'store'])->middleware('auth');
 
 
 // EDIT

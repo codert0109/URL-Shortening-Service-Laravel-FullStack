@@ -32,28 +32,56 @@ class MainController extends Controller
             // to accept iconest, we use the file() illuminate meth and then the store meth which takes the default storage disk to store uploaded http request file (in public since we have changed the default in confie storage setting)
         //dd($request->file('logo')->store());
         $formFields = $request->validate([
-            // note that here we add two validation filtering conditions to the company field. required as usual but also the magicmethod/helper unique(requirement) in which we set the table (listings) and make this company key-column record a unique one ... this is done as part normalisation of the SQL data to avoid overlapping inputs (in this case only one company can post jobs per account to avoid confusion)
-            //'id' => 'required',
-            'company' => ['required', Rule::unique('listings', 'company')],
-            'title' => 'required',
-            'location' => 'required',
-            'email' => ['required', 'email'],
-            'tags' => 'required',
-            'description' => 'required',
+            'url' => 'required|url|unique:urls,destination',
         ]);
-        // check if logo has been uploaded
-        if($request->hasFile('logo')){
-            // set the value of the formfields data field  as the path of the file that is being uploaded (this file path and the file itself as simultaenously given here by the file() method which takes a file upload via http and the store() method, which sets it into the designated folder (files) within the -now defaulted to public- storage directory of the laravel project directory)
-            $formFields['logo'] = $request->file('logo')->store('logos', 'public');
+        $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $unique = false;
+        // Store tested results in array to not test them again
+        $tested = [];
+        do{
+
+            $slug = substr(str_shuffle($permitted_chars), 0, 5);
+            if( in_array($slug, $tested) ){
+                continue;
+            }
+
+            // Check if it is unique in the database
+            $count = Url::where('slug',$slug)->count();
+
+            // Store the random character in the tested array
+            // To keep track which ones are already tested
+            $tested[] = $slug;
+
+            // String appears to be unique
+            if( $count == 0){
+                // Set unique to true to break the loop
+                $unique = true;
+            }
+
+            // If unique is still false at this point
+            // it will just repeat all the steps until
+            // it has generated a random string of characters
+
         }
-        // here we also ensure that every time a listing is created, it also has a record-row value inputted for the foreign-key user_id column on the SQL listings table which associates it to a given existing user in the users table (on the basis of that shared user_id key-column value)
-        // we assign value of the formFields listings class object container var (filled in by incoming post data from form on front end). That assigned value uses the authenticable superclass authentication check method on the id() method which is a method within the guard class under the scope of the authenticable superclass
-        $formFields['user_id']= auth()->id();
-        // also deploy the inbuilt create instant (instantiation of an instance object of our Listing model) which is inherited from the Model.php superclass.
-        // REMEMEBR TO INCLUDING THE formeField container var OR THE create() method will be empty of any input, throwing an SQL 1364 error
-        Listing::create($formFields);
+        while(!$unique);
+
+        $sql = Url::create(['destination' => $request->url, 'slug' => $slug, 'views' => 0]);
+        $sql->shortened_url = env('DOMAIN_URL').$sql->slug;
+        if($sql)
+            return response()
+            ->json([
+                'status' => 'Success',
+                'data' => $sql,
+            ], 200);
+        else
+            return response()
+            ->json([
+                'status' => 'Error',
+                'message' => 'Url not saved!',
+            ], 422);
         // return back to home upon submission note the use of the ->with directive that specified that a session flash message should be shown on the index page upon redirect to show user that the new entry has correctly been placed in the db/website. Note that this just deals iwth the backend of generating this message...the front end aspect is dealwith in a component (flash-message) which is injected with this message and itself injects into the / index view
-        return redirect('/')->with('message', 'Success! Listing Created.');
+        
+
     }
 // SHOW EDIT FORM
     public function edit(Listing $listing){

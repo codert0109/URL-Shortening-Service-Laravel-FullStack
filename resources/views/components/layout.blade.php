@@ -12,6 +12,8 @@
             referrerpolicy="no-referrer"/>
         <script src="//unpkg.com/alpinejs" defer></script>
         <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+        <meta name="csrf-token" content="{{ csrf_token() }}" />
         <script>
             tailwind.config = {
                 theme: {
@@ -73,6 +75,6 @@
     <p class="ml-2 text-xl">&copy; Brad Traversy @ TraversyMedia who created the tutorial for building this Laravel project</p>
     <a href="/listings/create" class="absolute top-1/3 right-10 bg-black text-white py-2 px-5">Post Job</a>
 </footer>
-<x-flash-message />
+@yield('bladeScript')
 </body>
 </html>
