@@ -23,7 +23,7 @@ class MainController extends Controller
 //SHOW ALL Listings
     public function index(){
           return view('index', [
-            "urls" => Url::all()]);
+            "urls" => Url::where('id', '>', 0)->orderBy('created_at','desc')->get()]);
     }
     public function store(Request $request){
         //dd($request->all());
