@@ -31,10 +31,15 @@ Route::get('/', [ MainController::class,'index' ])->middleware(('auth'));
 // NOTE that these middleware check functions will not work if we don't first attach an auth middleware login redirect function to our login(splashpage) route below... which is what has been done below.
 // STORE
 Route::post('/urls', [MainController::class, 'store'])->middleware('auth');
+// GET URLS AJAX
+Route::get('/urls', [MainController::class, 'getAll'])->middleware('auth')->name('urls.list');
 
 // URL Redirect
 Route::get('/{slug}', [MainController::class, 'update']);
 // AUTHENTICATION and LOGIN ROUTES
+
+// Delete url
+Route::get('/delete/{id}', [MainController::class, 'delete'])->middleware('auth');
 
 // Register splashPage ROUTE
 Route::get('/auth/register', [UserController::class, 'create'])->middleware('guest'); // middleware here is guest to block an alreayd logged in user from navigating to register route. the guest here means ONLY SHOW IF THE VISITOR IS ATTEMPTING TO ACCESS THIS PAGE AS A GUEST.
