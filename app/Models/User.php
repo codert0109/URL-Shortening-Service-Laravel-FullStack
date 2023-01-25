@@ -42,9 +42,4 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    // createa HAS MANY relationship to note that each user can have 0 or many (i.e. a 1tomany relationship) of the listing class' instances as fetched via the user_id SQL record of that or those listings.
-    public function listings(){
-        return $this->hasMany(Listing::class, 'user_id');
-    }
-    
 }

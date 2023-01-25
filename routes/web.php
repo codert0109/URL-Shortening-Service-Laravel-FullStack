@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Listing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -22,8 +21,6 @@ use App\Http\Controllers\MainController;
 
 // DISPLAY AND CRUD ROUTES
 
-//home  SHOW ALL listings
-//Route::get('/', [ ListingController::class,'index' ]);
 Route::get('/', [ MainController::class,'index' ])->middleware(('auth'));
 
 //NOTE - THE ORDER OF APPEARANCE IS IMPORTANT HERE SINCE WE ARE ROUTING VIA /LISTINGS/ ... if we want to route to a static resource then we need to put the static resource(in this case create view FIRST... then followed by the dynamic listings{whatever input variable is put in based on page, tag or search})
@@ -32,10 +29,6 @@ Route::get('/', [ MainController::class,'index' ])->middleware(('auth'));
 
 // these routes new to be available only to a authenticated user (loggedin). So we can use Auth middleware, attached as a additional method to be executed at the end of each of these routes, to make sure that whoever is accessing the routed path is an auth'd user.
 // NOTE that these middleware check functions will not work if we don't first attach an auth middleware login redirect function to our login(splashpage) route below... which is what has been done below.
-
-// CREATE record route (add a job)
-////Route::get('/listings/create', [ ListingController::class, 'create'])->middleware('auth');
-
 // STORE
 Route::post('/urls', [MainController::class, 'store'])->middleware('auth');
 

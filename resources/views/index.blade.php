@@ -4,7 +4,7 @@
     <div class="mb-6">
         <div class="flex">
             <div class="grow h-14">
-                <input type="text" class="border border-gray-200 rounded p-2 w-full" id="url" placeholder='Input Url' value="{{old('email')}}" />
+                <input type="text" class="border border-gray-200 rounded p-2 w-full" id="url" placeholder='Input Url' />
             </div>
             <div class="flex-none">
                 <button id="submit" class="bg-laravel text-white rounded py-2 px-8 hover:bg-black ml-4"> Submit </button>
@@ -64,7 +64,7 @@
             type: 'post',
             url: '/urls',
             data: {
-                url: $('#url').val(),
+                destination: $('#url').val(),
             },
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -87,6 +87,10 @@
                 }
             }
         })
+    })
+    $('#url').on('input',function() {
+        $('#error').hide();
+        $('#success').hide();
     })
 </script>
 

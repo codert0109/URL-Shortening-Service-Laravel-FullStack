@@ -10,29 +10,20 @@ use App\Models\Url;
 // NOTE however that we have to use the router anyways... the difference is that now, instead of hard coding into the router the routes we want to present to our user, we can instead deploy a reference to our custom controller class.
 class MainController extends Controller
 {
-    /* note the convention for route-paths: 
-    - index for splash page/home
-    - show to load up a single view from DB
-    -Create 
-    - Store
-    - Update
-    - Edit
-    - Destroy   (for crud+ functionatility)   
-    */
-//SHOW ALL Listings
+
+//SHOW ALL URLS
     public function index(){
           return view('index', [
             "urls" => Url::where('id', '>', 0)->orderBy('created_at','desc')->get()]);
     }
     public function store(Request $request){
-        //dd($request->all());
         // first use the validate helper method to validate the form input (we create a formFields custom var that will hold the incoming array of submitted data (that has been validated)):
             # we create a container var formFields which will contain the array that is being transmitted by POST. Not also the use of inbuild dependency injected validation methods via Illuminate's HTTP\Request superclass.
             // to accept iconest, we use the file() illuminate meth and then the store meth which takes the default storage disk to store uploaded http request file (in public since we have changed the default in confie storage setting)
-        //dd($request->file('logo')->store());
         $formFields = $request->validate([
-            'url' => 'required|url|unique:urls,destination',
+            'destination' => 'required|url|unique:urls,destination',
         ]);
+        // Generate 5 length random numberic string.
         $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $unique = false;
         // Store tested results in array to not test them again
@@ -79,7 +70,6 @@ class MainController extends Controller
                 'message' => 'Url not saved!',
             ], 422);
         // return back to home upon submission note the use of the ->with directive that specified that a session flash message should be shown on the index page upon redirect to show user that the new entry has correctly been placed in the db/website. Note that this just deals iwth the backend of generating this message...the front end aspect is dealwith in a component (flash-message) which is injected with this message and itself injects into the / index view
-        
 
     }
 
