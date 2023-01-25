@@ -55,7 +55,7 @@ class MainController extends Controller
         }
         while(!$unique);
 
-        $sql = Url::create(['destination' => $request->url, 'slug' => $slug, 'views' => 0]);
+        $sql = Url::create(['destination' => $request->destination, 'slug' => $slug, 'views' => 0]);
         $sql->shortened_url = env('DOMAIN_URL').$sql->slug;
         if($sql)
             return response()

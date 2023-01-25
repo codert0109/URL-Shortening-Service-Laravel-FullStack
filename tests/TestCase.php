@@ -9,7 +9,7 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
-    protected function assertAuthenticationRequired($uri, $method = 'get', $redirect = '/login')
+    protected function assertAuthenticationRequired($uri, $method = 'get', $redirect = '/auth/login')
     {
         $method = strtolower($method);
         if (!in_array($method, ['get', 'post', 'put', 'update', 'delete'])) {

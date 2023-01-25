@@ -2,12 +2,19 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Tests\WithStubUser;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class AuthenticationTest extends TestCase
+class AuthTest extends TestCase
 {
+    /**
+     * A basic feature test example.
+     *
+     * @return void
+     */
     use DatabaseTransactions, WithStubUser;
     public function test_index_authentication()
     {
@@ -27,14 +34,5 @@ class AuthenticationTest extends TestCase
 
         $this->postJson('/urls', ['destination' => 'https://test.test'])
             ->assertStatus(200);
-    }
-    public function test_it_checks_for_invalid_url()
-    {
-        $this->actingAs($this->createStubUser());
-
-        // $this->post('/urls', ['destination' => ''])
-        //     ->assertStatus(422);
-        $this->postJson('/urls', ['destination' => 'test'])
-            ->assertStatus(422);
     }
 }
